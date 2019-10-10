@@ -1,0 +1,50 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+hr{
+    border: none;
+    height: 1px;
+    color: #333;
+    background-color:#333333 ;
+}
+.container{
+    width: 90%;
+}
+.navbar {
+    margin-bottom: 20px;
+}
+.box{
+    border: 1px solid black;
+}
+
+.home-headline{
+    font-family: 'Times New Roman',Times,Serif;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    margin: auto;
+}
+.home-headline span{
+    background-color: #231F20;
+    padding: 5px 22px;
+}
+.page-top{
+    margin-top: -25px;
+}
+.aaaa{
+    margin-right: 5px;
+}
+
+.section-headline{
+    font-family: 'Times New Roman',Times,Serif;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    margin: auto;
+}
+
+.section-headline span{
+    background-color: #231F20;
+    padding: 5px 22px;
+}
