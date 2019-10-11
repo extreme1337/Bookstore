@@ -1,7 +1,5 @@
 package com.marko.bookstore.config;
 
-import com.marko.bookstore.service.impl.UserSecurityService;
-import com.marko.bookstore.utility.SecurityUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -13,7 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
+import com.marko.bookstore.service.impl.UserSecurityService;
+import com.marko.bookstore.utility.SecurityUtility;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/image/**",
             "/",
             "/newUser",
-            "/forgetPassword"
+            "/forgetPassword",
+            "/login",
+            "/fonts/**"
     };
 
     @Override
@@ -48,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable().cors().disable()
-                .formLogin().failureUrl("/login?error").defaultSuccessUrl("/")
+                .formLogin().failureUrl("/login?error")
+                /*.defaultSuccessUrl("/")*/
                 .loginPage("/login").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

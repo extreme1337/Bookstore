@@ -1,7 +1,5 @@
 package com.marko.bookstore.domain.security;
 
-import com.marko.bookstore.domain.User;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import com.marko.bookstore.domain.User;
 
 @Entity
 public class PasswordResetToken {

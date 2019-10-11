@@ -7,14 +7,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.marko.bookstore.domain.User;
-import com.marko.bookstore.domain.security.PasswordResetToken;
-import com.marko.bookstore.domain.security.Role;
-import com.marko.bookstore.domain.security.UserRole;
-import com.marko.bookstore.service.UserService;
-import com.marko.bookstore.service.impl.UserSecurityService;
-import com.marko.bookstore.utility.MailConstructor;
-import com.marko.bookstore.utility.SecurityUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,7 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import com.marko.bookstore.domain.User;
+import com.marko.bookstore.domain.security.PasswordResetToken;
+import com.marko.bookstore.domain.security.Role;
+import com.marko.bookstore.domain.security.UserRole;
+import com.marko.bookstore.service.UserService;
+import com.marko.bookstore.service.impl.UserSecurityService;
+import com.marko.bookstore.utility.MailConstructor;
+import com.marko.bookstore.utility.SecurityUtility;
 
 @Controller
 public class HomeController {
@@ -58,9 +57,40 @@ public class HomeController {
     }
 
     @RequestMapping("/forgetPassword")
-    public String forgetPassword(Model model) {
+    public String forgetPassword(
+            HttpServletRequest request,
+            @ModelAttribute("email") String email,
+            Model model
+    ) {
 
         model.addAttribute("classActiveForgetPassword", true);
+
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            model.addAttribute("emailNotExist", true);
+            return "myAccount";
+        }
+
+        String password = SecurityUtility.randomPassword();
+
+        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+        user.setPassword(encryptedPassword);
+
+        userService.save(user);
+
+        String token = UUID.randomUUID().toString();
+        userService.createPasswordResetTokenForUser(user, token);
+
+        String appUrl = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
+
+        SimpleMailMessage newEmail = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
+
+        mailSender.send(newEmail);
+
+        model.addAttribute("forgetPasswordEmailSent", "true");
+
+
         return "myAccount";
     }
 
@@ -82,7 +112,7 @@ public class HomeController {
         }
 
         if (userService.findByEmail(userEmail) != null) {
-            model.addAttribute("email", true);
+            model.addAttribute("emailExists", true);
 
             return "myAccount";
         }
@@ -109,13 +139,11 @@ public class HomeController {
         String appUrl = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
 
         SimpleMailMessage email = mailConstructor.constructResetTokenEmail(appUrl, request.getLocale(), token, user, password);
-        try {
-            mailSender.send(email);
 
-            model.addAttribute("emailSent", "true");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        mailSender.send(email);
+
+        model.addAttribute("emailSent", "true");
+
         return "myAccount";
     }
 
@@ -143,6 +171,11 @@ public class HomeController {
         model.addAttribute("user", user);
 
         model.addAttribute("classActiveEdit", true);
+        return "myProfile";
+    }
+
+    @RequestMapping("/myProfile")
+    public String showProfile(){
         return "myProfile";
     }
 }
