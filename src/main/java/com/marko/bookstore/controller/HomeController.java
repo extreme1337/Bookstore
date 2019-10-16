@@ -1,12 +1,17 @@
 package com.marko.bookstore.controller;
 
+import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
+import com.marko.bookstore.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,6 +30,7 @@ import com.marko.bookstore.domain.User;
 import com.marko.bookstore.domain.security.PasswordResetToken;
 import com.marko.bookstore.domain.security.Role;
 import com.marko.bookstore.domain.security.UserRole;
+import com.marko.bookstore.service.BookService;
 import com.marko.bookstore.service.UserService;
 import com.marko.bookstore.service.impl.UserSecurityService;
 import com.marko.bookstore.utility.MailConstructor;
@@ -45,6 +51,9 @@ public class HomeController {
     @Autowired
     private UserSecurityService userSecurityService;
 
+    @Autowired
+    private BookService bookService;
+
     @RequestMapping("/")
     public String index() {
         return "index";
@@ -54,6 +63,36 @@ public class HomeController {
     public String login(Model model) {
         model.addAttribute("classActiveLogin", true);
         return "myAccount";
+    }
+
+    @RequestMapping("/bookshelf")
+    public String bookshelf(Model model) {
+        List<Book> bookList = bookService.findAll();
+        model.addAttribute("bookList", bookList);
+
+        return "bookshelf";
+    }
+
+    @RequestMapping("/bookDetail")
+    public String bookDetail(
+            @PathParam("id") Long id, Model model, Principal principal
+    ) {
+        if(principal != null) {
+            String username = principal.getName();
+            User user = userService.findByUsername(username);
+            model.addAttribute("user", user);
+        }
+
+        Book book = bookService.findOne(id);
+
+        model.addAttribute("book", book);
+
+        List<Integer> qtyList = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+
+        model.addAttribute("qtyList", qtyList);
+        model.addAttribute("qty", 1);
+
+        return "bookDetail";
     }
 
     @RequestMapping("/forgetPassword")
@@ -171,11 +210,6 @@ public class HomeController {
         model.addAttribute("user", user);
 
         model.addAttribute("classActiveEdit", true);
-        return "myProfile";
-    }
-
-    @RequestMapping("/myProfile")
-    public String showProfile(){
         return "myProfile";
     }
 }

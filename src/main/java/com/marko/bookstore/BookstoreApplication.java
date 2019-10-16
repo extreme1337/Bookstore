@@ -21,7 +21,7 @@ public class BookstoreApplication implements CommandLineRunner {
 	private UserService userService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookstoreApplication.class, args);
+		SpringApplication.run(BookstoreApplication.class,args);
 	}
 
 	@Override
