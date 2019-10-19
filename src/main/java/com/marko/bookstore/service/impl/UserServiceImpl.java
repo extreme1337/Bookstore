@@ -2,6 +2,8 @@ package com.marko.bookstore.service.impl;
 
 import java.util.Set;
 
+import com.marko.bookstore.domain.UserBilling;
+import com.marko.bookstore.domain.UserPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,16 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User save(User user) {
 		return userRepository.save(user);
+	}
+
+	@Override
+	public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user) {
+		userPayment.setUser(user);
+		userPayment.setUserBilling(userBilling);
+		userPayment.setDefaultPayment(true);
+		userBilling.setUserPayment(userPayment);
+		user.getUserPaymentList().add(userPayment);
+		save(user);
 	}
 
 }
