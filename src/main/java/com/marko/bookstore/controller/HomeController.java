@@ -350,7 +350,7 @@ public class HomeController {
         }
     }
     @RequestMapping(value = "/setDefaultPayment",method = RequestMethod.POST)
-    public String setDefaultPayment(@ModelAttribute("defaultPaymentId") Long defaultPaymentId, Model model,Principal principal){
+    public String setDefaultPayment(@ModelAttribute("defaultUserPaymentId") Long defaultPaymentId, Model model,Principal principal){
         User user = userService.findByUsername(principal.getName());
         userService.setUserDefaultPayment(defaultPaymentId,user);
 
