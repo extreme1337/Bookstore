@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
 import com.marko.bookstore.domain.*;
+import com.marko.bookstore.service.UserPaymentService;
 import com.marko.bookstore.utility.USConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -48,6 +49,9 @@ public class HomeController {
 
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private UserPaymentService userPaymentService;
 
     @RequestMapping("/")
     public String index() {
@@ -295,6 +299,68 @@ public class HomeController {
         model.addAttribute("listOfCreditCards",true);
         model.addAttribute("classActiveBilling",true);
         model.addAttribute("listOfShippingAddresses",true);
+
+        return "myProfile";
+    }
+    @RequestMapping("/updateCreditCard")
+    public String updateCreditCard(@ModelAttribute("id") Long creditCardId, Model model,Principal principal){
+        User user = userService.findByUsername(principal.getName());
+        UserPayment userPayment = userPaymentService.findById(creditCardId);
+        if(user.getId() != userPayment.getUser().getId()){
+            return "badRequestPage";
+        }else {
+            model.addAttribute("user",user);
+            UserBilling userBilling = userPayment.getUserBilling();
+            model.addAttribute("userPayment",userPayment);
+            model.addAttribute("userBilling",userBilling);
+
+            List<String> stateList = USConstants.listOfUSStateCode;
+            Collections.sort(stateList);
+            model.addAttribute("stateList",stateList);
+
+            model.addAttribute("userPaymentList",user.getUserPaymentList());
+            model.addAttribute("userShippingList",user.getUserShippingList());
+
+            model.addAttribute("addNewCreditCard",true);
+            model.addAttribute("classActiveBilling",true);
+            model.addAttribute("listOfShippingAddresses",true);
+
+            return "myProfile";
+        }
+    }
+
+    @RequestMapping("/removeCreditCard")
+    public String removeCreditCard(@ModelAttribute("id") Long creditCardId, Model model,Principal principal){
+        User user = userService.findByUsername(principal.getName());
+        UserPayment userPayment = userPaymentService.findById(creditCardId);
+        if(user.getId() != userPayment.getUser().getId()){
+            return "badRequestPage";
+        }else {
+            model.addAttribute("user", user);
+            userPaymentService.removeById(creditCardId);
+
+
+            model.addAttribute("userPaymentList",user.getUserPaymentList());
+            model.addAttribute("userShippingList",user.getUserShippingList());
+
+            model.addAttribute("listOfCreditCards",true);
+            model.addAttribute("classActiveBilling",true);
+            model.addAttribute("listOfShippingAddresses",true);
+            return "myProfile";
+        }
+    }
+    @RequestMapping(value = "/setDefaultPayment",method = RequestMethod.POST)
+    public String setDefaultPayment(@ModelAttribute("defaultPaymentId") Long defaultPaymentId, Model model,Principal principal){
+        User user = userService.findByUsername(principal.getName());
+        userService.setUserDefaultPayment(defaultPaymentId,user);
+
+        model.addAttribute("user",user);
+        model.addAttribute("listOfCreditCards",true);
+        model.addAttribute("classActiveBilling",true);
+        model.addAttribute("listOfShippingAddresses",true);
+
+        model.addAttribute("userPaymentList",user.getUserPaymentList());
+        model.addAttribute("userShippingList",user.getUserShippingList());
 
         return "myProfile";
     }

@@ -1,9 +1,11 @@
 package com.marko.bookstore.service.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import com.marko.bookstore.domain.UserBilling;
 import com.marko.bookstore.domain.UserPayment;
+import com.marko.bookstore.repository.UserPaymentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,8 @@ import com.marko.bookstore.service.UserService;
 public class UserServiceImpl implements UserService{
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-	
+	@Autowired
+	private UserPaymentRepository userPaymentRepository;
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -85,5 +88,21 @@ public class UserServiceImpl implements UserService{
 		user.getUserPaymentList().add(userPayment);
 		save(user);
 	}
+
+	@Override
+	public void setUserDefaultPayment(Long defaultPaymentId, User user) {
+		List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
+		for(UserPayment userPayment : userPaymentList){
+			if(userPayment.getId()==defaultPaymentId){
+				userPayment.setDefaultPayment(true);
+				userPaymentRepository.save(userPayment);
+			}else {
+				userPayment.setDefaultPayment(false);
+				userPaymentRepository.save(userPayment);
+			}
+	}
+
+
+}
 
 }

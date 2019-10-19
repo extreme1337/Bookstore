@@ -161,10 +161,9 @@
                                                            th:value="${userPayment.id}"
                                                            th:checked="${userPayment.defaultPayment}"/></td>
                                                 <td th:text="${userPayment.cardName}"></td>
-                                                <td><a
-                                                        th:href="@{/updateCreditCard(id=${userPayment.id})}"><i
-                                                        class="fa fa-pencil"></i></a> <a
-                                                        th:href="@{/removeCreditCard(id=${userPayment.id})}"><i
+                                                <td><a th:href="@{/updateCreditCard(id=${userPayment.id})}">Update<i
+                                                        class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+                                                    <a th:href="@{/removeCreditCard(id=${userPayment.id})}">Remove<i
                                                         class="fa fa-times"></i></a></td>
                                             </tr>
                                             </tbody>
