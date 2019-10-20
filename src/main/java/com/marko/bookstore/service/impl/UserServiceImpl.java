@@ -5,7 +5,8 @@ import java.util.Set;
 
 import com.marko.bookstore.domain.UserBilling;
 import com.marko.bookstore.domain.UserPayment;
-import com.marko.bookstore.repository.UserPaymentRepository;
+import com.marko.bookstore.domain.UserShipping;
+import com.marko.bookstore.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,6 @@ import org.springframework.stereotype.Service;
 import com.marko.bookstore.domain.User;
 import com.marko.bookstore.domain.security.PasswordResetToken;
 import com.marko.bookstore.domain.security.UserRole;
-import com.marko.bookstore.repository.PasswordResetTokenRepository;
-import com.marko.bookstore.repository.RoleRepository;
-import com.marko.bookstore.repository.UserRepository;
 import com.marko.bookstore.service.UserService;
 
 @Service
@@ -30,6 +28,8 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private UserShippingRepository userShippingRepository;
 	
 	@Autowired
 	private PasswordResetTokenRepository passwordResetTokenRepository;
@@ -104,5 +104,27 @@ public class UserServiceImpl implements UserService{
 
 
 }
+
+	@Override
+	public void updateUserShipping(UserShipping userShipping, User user) {
+		userShipping.setUser(user);
+		userShipping.setUserShippingDefault(true);
+		user.getUserShippingList().add(userShipping);
+		save(user);
+	}
+
+	@Override
+	public void setUserDefaultShipping(Long defaultShippingId, User user) {
+		List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
+		for (UserShipping userShipping : userShippingList) {
+			if (userShipping.getId() == defaultShippingId) {
+				userShipping.setUserShippingDefault(true);
+				userShippingRepository.save(userShipping);
+			} else {
+				userShipping.setUserShippingDefault(false);
+				userShippingRepository.save(userShipping);
+			}
+		}
+	}
 
 }

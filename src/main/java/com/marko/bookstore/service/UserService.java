@@ -5,6 +5,7 @@ import java.util.Set;
 import com.marko.bookstore.domain.User;
 import com.marko.bookstore.domain.UserBilling;
 import com.marko.bookstore.domain.UserPayment;
+import com.marko.bookstore.domain.UserShipping;
 import com.marko.bookstore.domain.security.PasswordResetToken;
 import com.marko.bookstore.domain.security.UserRole;
 
@@ -25,4 +26,8 @@ public interface UserService {
 
 
 	void setUserDefaultPayment(Long defaultPaymentId, User user);
+
+    void updateUserShipping(UserShipping userShipping, User user);
+
+    void setUserDefaultShipping(Long defaultShippingId, User user);
 }
