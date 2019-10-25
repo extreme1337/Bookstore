@@ -21,17 +21,17 @@ public class BookstoreApplication implements CommandLineRunner {
 	private UserService userService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(BookstoreApplication.class,args);
+		SpringApplication.run(BookstoreApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		User user1 = new User();
 		user1.setFirstName("Marko");
-		user1.setLastName("Markovic");
+		user1.setLastName("Meseljic");
 		user1.setUsername("m");
 		user1.setPassword(SecurityUtility.passwordEncoder().encode("m"));
-		user1.setEmail("marko.miseljic.14@gmail.com");
+		user1.setEmail("misko309@gmail.com");
 		Set<UserRole> userRoles = new HashSet<>();
 		Role role1= new Role();
 		role1.setRoleId(1);
