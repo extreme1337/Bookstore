@@ -2,13 +2,7 @@ package com.marko.bookstore.domain;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +20,7 @@ public class Book {
     private String publicationDate;
     private String language;
     private String category;
-    private int numberOfPages;
+    private int numbersOfPages;
     private String format;
     private int isbn;
     private double shippingWeight;
@@ -42,7 +36,7 @@ public class Book {
     private MultipartFile bookImage;
 
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book",cascade = CascadeType.MERGE)
     @JsonIgnore
     private List<BookToCartItem> bookToCartItemList;
 
@@ -102,12 +96,12 @@ public class Book {
         this.category = category;
     }
 
-    public int getNumberOfPages() {
-        return numberOfPages;
+    public int getNumbersOfPages() {
+        return numbersOfPages;
     }
 
-    public void setNumberOfPages(int numberOfPages) {
-        this.numberOfPages = numberOfPages;
+    public void setNumbersOfPages(int numbersOfPages) {
+        this.numbersOfPages = numbersOfPages;
     }
 
     public String getFormat() {

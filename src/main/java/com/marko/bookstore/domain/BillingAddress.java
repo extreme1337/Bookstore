@@ -16,7 +16,7 @@ public class BillingAddress {
     private String BillingAddressCountry;
     private String BillingAddressZipcode;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private Order order;
 
     public Long getId() {

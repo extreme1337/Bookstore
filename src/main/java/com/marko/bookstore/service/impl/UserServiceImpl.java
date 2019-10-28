@@ -24,10 +24,15 @@ import com.marko.bookstore.repository.UserRepository;
 import com.marko.bookstore.repository.UserShippingRepository;
 import com.marko.bookstore.service.UserService;
 
+import javax.persistence.EntityManager;
+
 @Service
 public class UserServiceImpl implements UserService{
 
 	private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
+	@Autowired
+	private EntityManager entityManager;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -70,13 +75,14 @@ public class UserServiceImpl implements UserService{
 	public User createUser(User user, Set<UserRole> userRoles){
 		User localUser = userRepository.findByUsername(user.getUsername());
 
+
 		if(localUser != null) {
 			LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
 		} else {
 			for (UserRole ur : userRoles) {
 				roleRepository.save(ur.getRole());
 			}
-
+			entityManager.persist(user);
 			user.getUserRoles().addAll(userRoles);
 
 			ShoppingCart shoppingCart = new ShoppingCart();
@@ -85,6 +91,9 @@ public class UserServiceImpl implements UserService{
 
 			user.setUserShippingList(new ArrayList<UserShipping>());
 			user.setUserPaymentList(new ArrayList<UserPayment>());
+			entityManager.merge(user);
+			entityManager.flush();
+
 
 			localUser = userRepository.save(user);
 		}

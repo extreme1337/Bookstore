@@ -23,7 +23,7 @@ public class Payment {
     private int cvc;
     private String holderName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     private Order order;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "userPayment")

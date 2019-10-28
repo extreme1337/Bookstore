@@ -36,7 +36,7 @@ public class Order {
     @OneToOne(cascade=CascadeType.ALL)
     private Payment payment;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
 
     public Long getId() {
