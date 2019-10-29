@@ -2,10 +2,7 @@ package com.marko.bookstore.service;
 
 import java.util.List;
 
-import com.marko.bookstore.domain.Book;
-import com.marko.bookstore.domain.CartItem;
-import com.marko.bookstore.domain.ShoppingCart;
-import com.marko.bookstore.domain.User;
+import com.marko.bookstore.domain.*;
 
 public interface CartItemService {
     List<CartItem> findByShoppingCart(ShoppingCart shoppingCart);
@@ -19,4 +16,6 @@ public interface CartItemService {
     void removeCartItem(CartItem byId);
 
     CartItem save(CartItem cartItem);
+
+    List<CartItem> findByOrder(Order order);
 }
