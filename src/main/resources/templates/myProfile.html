@@ -49,6 +49,12 @@
                         <div class="panel panel-default" style="border: none;">
                             <div class="panel-body"
                                  style="background-color: #ededed; margin-top: 20px;">
+                                <div class="alert alert-danger" th:if="${incorrectPassword}">
+                                    <strong>Incorrect Password!</strong>Please enter the correct password for the current user.
+                                </div>
+                                <div class="alert alert-danger" th:if="${updateSuccess}">
+                                    <strong>Update Success!</strong>
+                                </div>
                                 <form th:action="@{/updateUserInfo}" method="post">
                                     <input type="hidden" name="id" th:value="${user.id}"/>
 
@@ -77,17 +83,17 @@
                                                th:value="${user.username}"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="currentPassword">Current Password</label> ' <input
-                                            type="text" class="form-control" id="currentPassword"
-                                            name="currentPassword" th:value="${currentPassword}"/>
+                                        <label for="currentPassword">Current Password</label>
+                                        <input type="password" class="form-control" id="currentPassword"
+                                               name="password" th:value="${currentPassword}"/>
                                     </div>
                                     <p style="color: #828282">Enter your current password to
                                         change the email address or password.</p>
 
                                     <div class="form-group">
-                                        <label for="email">* Email Address</label> ' <input
-                                            type="text" class="form-control" id="email" name="email"
-                                            th:value="${user.email}"/>
+                                        <label for="email">* Email Address</label>
+                                        <input type="text" class="form-control" id="email" name="email"
+                                               th:value="${user.email}"/>
                                     </div>
                                     <p style="color: #828282">A valid email address. All
                                         emails from the system withll be sent to this address. The
@@ -96,9 +102,9 @@
                                         notification.</p>
 
                                     <div class="form-group">
-                                        <label for="txtNewPassword">Password</label> ' <input
-                                            type="password" class="form-control" id="txtNewPassword"
-                                            name="newPassword"/>
+                                        <label for="txtNewPassword">Password</label>&nbsp;<span id="checkPasswordMatch" style="color: red"></span>
+                                        <input type="password" class="form-control" id="txtNewPassword"
+                                               name="newPassword"/>
                                     </div>
 
                                     <div class="form-group">
@@ -108,9 +114,7 @@
                                     <p style="color: #828282">To change the current user
                                         password, enter the new password in both fields.</p>
 
-                                    <button type="submit" class="btn btn-primary">Create
-                                        new account
-                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save All</button>
                                 </form>
                             </div>
                         </div>
@@ -340,7 +344,7 @@
                                             </div>
                                         </div>
                                         <hr/>
-                                        <button type="submit" class="btn btn-primary btn-lg">Save All</button>
+                                        <button id="updateUserInfoButton" type="submit" class="btn btn-primary btn-lg">Save All</button>
                                     </form>
                                 </div>
                             </div>

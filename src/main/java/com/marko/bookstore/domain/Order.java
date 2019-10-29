@@ -1,5 +1,6 @@
 package com.marko.bookstore.domain;
 
+import java.io.BufferedOutputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -34,10 +35,21 @@ public class Order {
     private ShippingAddress shippingAddress;
 
     @OneToOne(cascade=CascadeType.ALL)
+    private BillingAddress billingAddress;
+
+    @OneToOne(cascade=CascadeType.ALL)
     private Payment payment;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
+
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
+    }
 
     public Long getId() {
         return id;
