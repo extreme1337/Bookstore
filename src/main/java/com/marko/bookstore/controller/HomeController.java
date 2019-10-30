@@ -19,10 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.marko.bookstore.domain.security.PasswordResetToken;
 import com.marko.bookstore.domain.security.Role;
@@ -72,10 +69,26 @@ public class HomeController {
         return "myAccount";
     }
 
+    @RequestMapping("/hours")
+    public String hours(){
+        return "hours";
+    }
+
+    @RequestMapping("/faq")
+    public String faq(){
+        return "faq";
+    }
+
     @RequestMapping("/bookshelf")
-    public String bookshelf(Model model) {
+    public String bookshelf(Model model,Principal principal) {
+        if(principal != null){
+            String username = principal.getName();
+            User user = userService.findByUsername(username);
+            model.addAttribute("user",user);
+        }
         List<Book> bookList = bookService.findAll();
         model.addAttribute("bookList", bookList);
+        model.addAttribute("activeAll",true);
 
         return "bookshelf";
     }
@@ -536,6 +549,8 @@ public class HomeController {
         model.addAttribute("updateSuccess",true);
         model.addAttribute("user",currentUser);
         model.addAttribute("classActiveEdit",true);
+        model.addAttribute("listOfShippingAddresses",true);
+        model.addAttribute("listOfCreditCards",true);
 
         UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),

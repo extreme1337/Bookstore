@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: common-header"/>
 
 <body>
@@ -462,7 +463,7 @@
 </div>
 <!-- end of container -->
 
-
+<div th:replace="common/header :: footer"/>
 <div th:replace="common/header :: body-bottom-scripts"/>
 </body>
 </html>
